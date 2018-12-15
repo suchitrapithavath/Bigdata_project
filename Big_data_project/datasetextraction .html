@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<p id="demo"></p>
+<div id="content"></div>
+
+<script type ="text/javascript">
+var p="";
+
+var rawFile = new XMLHttpRequest();
+    rawFile.open("GET","http://192.168.1.52/new.json",false); // accessing hfs file server url by placing .json file in hfs 
+	
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                
+                p = JSON.parse(allText);// converting text file to json
+            }
+        }
+    }
+    rawFile.send(null);
+console.log('======= Object.keys ==========');
+var fullAttrVar="";
+var lessAttrVar="";
+var leastAttrVar="";
+function writeTextFile(jsonObj,jsonObj2,jsonObj3) {
+		var blob = new Blob([jsonObj], {type: "application/json"});
+		var url  = URL.createObjectURL(blob);
+
+		var a = document.createElement('a');
+		a.download    = "fullAttrU";
+		a.href        = url;
+		a.textContent = "Download backup.json";
+		
+		document.getElementById('content').appendChild(a);
+		var blob = new Blob([jsonObj2], {type: "application/json"});// blob url is used download the text file
+		var url  = URL.createObjectURL(blob);
+
+		var b = document.createElement('a');
+		b.download    = "lessattribute";
+		b.href        = url;
+		b.textContent = "Download backup1.json";
+		
+		document.getElementById('content').appendChild(b);
+		var blob = new Blob([jsonObj3], {type: "application/json"});
+		var url  = URL.createObjectURL(blob);
+
+		var c = document.createElement('a');
+		c.download    = "leastattribute";
+		c.href        = url;
+		c.textContent = "Download backup2.json";
+		
+		document.getElementById('content').appendChild(c);
+}
+
+Object.keys(p).map(e => {
+    
+    if((`${Object.keys(p[e]).length}`) == 18)
+    {
+	fullAttrVar= fullAttrVar+`${JSON.stringify(p[e])}`+","; //  accessing all the json object which has 18 attributes
+       	
+    }
+    
+    if((`${Object.keys(p[e]).length}`)<18&&(`${Object.keys(p[e]).length}`) >= 8)
+    {
+	 lessAttrVar=lessAttrVar+`${JSON.stringify(p[e])}`+","; /  accessing all the json object which has <18 and >=8 attributes
+		    
+    }
+    
+    if((`${Object.keys(p[e]).length}`)<8)
+    {
+	 leastAttrVar= leastAttrVar+`${JSON.stringify(p[e])}`+",";// accessing the json object <8
+		
+    }
+	
+});
+writeTextFile(fullAttrVar,lessAttrVar,leastAttrVar);
+
+ 
+
+</script>
+
+</body>
+</html>
